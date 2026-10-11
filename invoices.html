@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoices - StockMaster</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container no-print">
+        <main class="main-content" style="overflow-y: auto; display: block;">
+            <div class="top-actions" style="margin-bottom: 24px;">
+                <button onclick="window.location.href='index.html'" class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bx-arrow-back'></i> <span data-i18n="nav_dashboard">Dashboard</span>
+                </button>
+                
+                <div style="margin-left: auto; display: flex; gap: 10px;">
+                    <button id="lang-toggle" class="lang-btn" aria-label="Toggle Language">اردو</button>
+                    <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme"><i class='bx bx-sun'></i></button>
+                    <button id="login-btn" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
+                        <i class='bx bxl-google'></i> <span>Login</span>
+                    </button>
+                </div>
+            </div>
+
+            <header class="page-header">
+                <h1 data-i18n="nav_invoices">Invoices</h1>
+                <p data-i18n="inv_desc">View past transactions and print invoices.</p>
+            </header>
+
+            <!-- Invoices Section -->
+            <div class="glass-panel mt-4" style="margin-top: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <h2 data-i18n="nav_invoices">Invoices</h2>
+                        <button id="btn-download-statement" class="btn btn-secondary" style="padding: 6px 12px; display: flex; align-items: center; gap: 6px; font-size: 13px;" title="Download Statement as Image">
+                            <i class='bx bx-image-download'></i> <span data-i18n="btn_download_statement">Download Statement</span>
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 12px; width: 100%; max-width: 600px; justify-content: flex-end; align-items: center;">
+                        <input type="date" id="admin-invoice-date-search" title="Filter by date" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-primary);" onclick="this.showPicker && this.showPicker()">
+                        <input type="text" id="admin-invoice-search" placeholder="Search Invoice by Person Name or TXN ID..." style="flex: 1; min-width: 200px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-primary);">
+                    </div>
+                </div>
+                <div class="table-container" style="max-height: calc(100vh - 300px);">
+                    <table id="invoices-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="th_person">Person Name</th>
+                                <th data-i18n="th_date">Date</th>
+                                <th data-i18n="th_type">Type</th>
+                                <th data-i18n="th_item">Item</th>
+                                <th data-i18n="th_payment_method">Payment Method</th>
+                                <th data-i18n="th_total_amt">Total Amt</th>
+                                <th data-i18n="label_paid">Paid</th>
+                                <th data-i18n="th_remaining">Remaining</th>
+                                <th data-i18n="th_actions" data-html2canvas-ignore="true">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Print Template -->
+    <div id="print-area" class="print-only">
+        <div class="invoice-header">
+            <h2 id="print-title">INVOICE</h2>
+            <p id="print-company">StockMaster Systems</p>
+            <p id="invoice-date"></p>
+            <p id="invoice-person"></p>
+            <p><strong id="label-type"></strong> <span id="invoice-type"></span></p>
+        </div>
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th id="th-desc">Description</th>
+                    <th id="th-weight">Weight</th>
+                    <th id="th-rate">Rate/Unit</th>
+                    <th id="th-total">Total</th>
+                </tr>
+            </thead>
+            <tbody id="print-body">
+                <!-- Rows injected dynamically -->
+            </tbody>
+        </table>
+        <div class="print-footer-info">
+            <p id="items-total-row"><span id="label-items-total-print"></span> <strong id="invoice-items-total"></strong></p>
+            <p id="prev-balance-row" style="display:none;"><span id="label-prev-bal-print"></span> <strong id="invoice-prev-bal"></strong></p>
+            <p id="grand-total-row" style="display:none;"><span id="label-grand-total-print"></span> <strong id="invoice-grand-total"></strong></p>
+            <p><span id="label-paid-print"></span> <strong id="invoice-paid"></strong></p>
+            <p id="payment-method-row" style="display:none;"><span id="label-payment-method-print"></span> <strong id="invoice-payment-method"></strong></p>
+            <p id="bank-name-row-print" style="display:none;"><span id="label-bank-name-print"></span> <strong id="invoice-bank-name"></strong></p>
+            <p><span id="label-rem-print"></span> <strong id="invoice-remaining"></strong></p>
+        </div>
+        <div class="invoice-footer">
+            <p id="print-footer"></p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Provide mock functions for app.js so it doesn't crash on this page
+        window.populateStockItemSelect = () => {};
+        window.renderInvoices = () => {};
+        window.updateDashboard = () => {};
+        window.populateDashboardDatalists = () => {};
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="translations.js?v=5" defer></script>
+    <script src="store.js?v=5" defer></script>
+    <script src="app.js?v=5" defer></script>
+    <script src="stock.js?v=5" defer></script> 
+    <script src="invoice.js?v=5" defer></script> 
+    <script src="admin.js?v=5" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="supabase-config.js" defer></script>
+    <script src="auth.js?v=5" defer></script>
+    <script src="supabase-sync.js?v=1" defer></script>
+
+</body>
+</html>

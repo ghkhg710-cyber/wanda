@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Items - StockMaster</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container no-print">
+        <main class="main-content" style="overflow-y: auto; display: block;">
+            <div class="top-actions" style="margin-bottom: 24px;">
+                <button onclick="window.location.href='index.html'" class="btn btn-secondary"
+                    style="display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bx-arrow-back'></i> <span data-i18n="nav_dashboard">Dashboard</span>
+                </button>
+                <div style="margin-left: auto; display: flex; gap: 10px;">
+                    <button onclick="window.location.href='invoices.html'" class="btn btn-secondary"
+                        style="display: flex; align-items: center; gap: 8px;">
+                        <i class='bx bx-receipt'></i> <span data-i18n="nav_invoices">Invoices</span>
+                    </button>
+                    <button id="lang-toggle" class="lang-btn" aria-label="Toggle Language">اردو</button>
+                    <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme"><i
+                            class='bx bx-sun'></i></button>
+                    <button id="login-btn" class="btn btn-primary"
+                        style="display: flex; align-items: center; gap: 8px;">
+                        <i class='bx bxl-google'></i> <span>Login</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="admin-main-content">
+                <header class="page-header">
+                    <h1 data-i18n="admin_title">Admin Panel</h1>
+                    <p data-i18n="admin_desc">Manage your inventory items.</p>
+                </header>
+
+                <div class="dashboard-stats">
+                    <div class="stat-card"
+                        style="background: var(--info-gradient); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; color: white; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3); border: none;">
+                        <h3 data-i18n="stat_items" style="margin: 0; font-size: 0.9rem; color: rgba(255,255,255,0.8);">
+                            Total Items</h3>
+                        <p id="admin-stat-items" class="stat-value"
+                            style="margin: 0; font-size: 1.8rem; font-weight: 700;">0</p>
+                    </div>
+                    <div class="stat-card"
+                        style="background: var(--success-gradient); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); border: none;">
+                        <h3 data-i18n="stat_in" style="margin: 0; font-size: 0.9rem; color: rgba(255,255,255,0.8);">
+                            Total Stock In (Kg)</h3>
+                        <p id="admin-stat-in" class="stat-value"
+                            style="margin: 0; font-size: 1.8rem; font-weight: 700;">0.00</p>
+                    </div>
+                    <div class="stat-card"
+                        style="background: var(--alert-gradient); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); border: none;">
+                        <h3 data-i18n="stat_out" style="margin: 0; font-size: 0.9rem; color: rgba(255,255,255,0.8);">
+                            Total Stock Out (Kg)</h3>
+                        <p id="admin-stat-out" class="stat-value"
+                            style="margin: 0; font-size: 1.8rem; font-weight: 700;">0.00</p>
+                    </div>
+                    <div class="stat-card"
+                        style="background: var(--warning-gradient); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; color: white; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); border: none;">
+                        <h3 data-i18n="stat_rem" style="margin: 0; font-size: 0.9rem; color: rgba(255,255,255,0.8);">
+                            Total Remaining Payments</h3>
+                        <p id="admin-stat-rem" class="stat-value"
+                            style="margin: 0; font-size: 1.8rem; font-weight: 700;">0.00</p>
+                    </div>
+                    <div class="stat-card"
+                        style="background: linear-gradient(135deg, #ec4899, #be185d); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; color: white; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3); border: none;">
+                        <h3 data-i18n="stat_payables"
+                            style="margin: 0; font-size: 0.9rem; color: rgba(255,255,255,0.8);">
+                            Total Payables (To Give)</h3>
+                        <p id="admin-stat-payables" class="stat-value"
+                            style="margin: 0; font-size: 1.8rem; font-weight: 700;">0.00</p>
+                    </div>
+                </div>
+
+                <h2 data-i18n="admin_profit_summary" style="margin-top: 32px; margin-bottom: 16px;">Profit Summary
+                    (Sales - Purchases)</h2>
+                <div class="dashboard-stats" style="margin-bottom: 32px;">
+                    <div class="stat-card"
+                        style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; color: white; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); border: none;">
+                        <h3 data-i18n="stat_profit_week"
+                            style="margin: 0; font-size: 0.9rem; color: rgba(255,255,255,0.8);">This Week's Profit</h3>
+                        <p id="admin-stat-profit-week" class="stat-value"
+                            style="margin: 0; font-size: 1.8rem; font-weight: 700;">0.00</p>
+                    </div>
+                    <div class="stat-card"
+                        style="background: linear-gradient(135deg, #10b981, #059669); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); border: none;">
+                        <h3 data-i18n="stat_profit_month"
+                            style="margin: 0; font-size: 0.9rem; color: rgba(255,255,255,0.8);">This Month's Profit</h3>
+                        <p id="admin-stat-profit-month" class="stat-value"
+                            style="margin: 0; font-size: 1.8rem; font-weight: 700;">0.00</p>
+                    </div>
+                    <div class="stat-card"
+                        style="background: linear-gradient(135deg, #f59e0b, #d97706); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; color: white; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); border: none;">
+                        <h3 data-i18n="stat_profit_overall"
+                            style="margin: 0; font-size: 0.9rem; color: rgba(255,255,255,0.8);">Overall Profit</h3>
+                        <p id="admin-stat-profit-overall" class="stat-value"
+                            style="margin: 0; font-size: 1.8rem; font-weight: 700;">0.00</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap;">
+                    <button id="btn-export-data" class="btn btn-primary"
+                        style="display: flex; align-items: center; gap: 8px;">
+                        <i class='bx bx-export'></i> <span data-i18n="btn_export_data">Backup Data (Export)</span>
+                    </button>
+                    <button id="btn-import-data" class="btn btn-secondary"
+                        style="display: flex; align-items: center; gap: 8px;">
+                        <i class='bx bx-import'></i> <span data-i18n="btn_import_data">Restore Data (Import)</span>
+                    </button>
+                    <input type="file" id="import-data-file" accept=".json" style="display: none;">
+                </div>
+
+                <div class="admin-grid">
+                    <!-- Add Item Form -->
+                    <div class="glass-panel">
+                        <h2 data-i18n="admin_add_new" style="margin-bottom: 16px;">Add New Item</h2>
+                        <form id="add-item-form">
+                            <div class="form-group">
+                                <label for="item-name" data-i18n="label_item_name">Item Name</label>
+                                <input type="text" id="item-name" required placeholder="e.g. Rice, Wheat..."
+                                    data-i18n-placeholder="placeholder_item">
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-1" style="width: 100%; margin-top: 16px;"
+                                data-i18n="btn_add_item">Add Item</button>
+                        </form>
+                    </div>
+
+                    <!-- Items Table -->
+                    <div class="glass-panel">
+                        <h2 data-i18n="admin_item_list" style="margin-bottom: 16px;">Item List</h2>
+                        <div class="table-container" style="max-height: calc(100vh - 200px);">
+                            <table id="items-table">
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="label_item_name">Item Name</th>
+                                        <th data-i18n="th_stock_in">Stock In</th>
+                                        <th data-i18n="th_stock_out">Stock Out</th>
+                                        <th data-i18n="th_current_stock">Current Stock</th>
+                                        <th data-i18n="th_action" style="width: 100px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Items loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel" style="margin-top: 32px; margin-bottom: 32px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <h2 data-i18n="admin_outstanding_balances" style="margin: 0;">Outstanding Balances (To Receive)
+                        </h2>
+                        <input type="text" id="admin-balance-search" placeholder="Search by Person Name or Code..."
+                            style="width: 100%; max-width: 400px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-primary);">
+                    </div>
+                    <div class="table-container" style="max-height: 400px;">
+                        <table id="outstanding-balances-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="th_person">Person Name</th>
+                                    <th data-i18n="th_paid_amt">Paid Amount</th>
+                                    <th data-i18n="th_remaining_amt">Remaining Amount</th>
+                                    <th style="width: 100px;">Statement</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Outstanding balances loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="glass-panel"
+                    style="margin-bottom: 32px; background: rgba(239, 68, 68, 0.05); border-left: 4px solid var(--danger);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <h2 data-i18n="admin_payables" style="margin: 0; color: var(--danger);">Payables (To Give)
+                        </h2>
+                        <input type="text" id="admin-payable-search" placeholder="Search by Person Name or Code..."
+                            style="width: 100%; max-width: 400px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-primary);">
+                    </div>
+                    <div class="table-container" style="max-height: 400px;">
+                        <table id="payables-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="th_person">Person Name</th>
+                                    <th data-i18n="th_given_amt">Given Amount</th>
+                                    <th data-i18n="th_payable_amt">To Give (Payable)</th>
+                                    <th style="width: 100px;">Statement</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Payables loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Print Template -->
+    <div id="print-area" class="print-only">
+        <div class="invoice-header">
+            <h2 id="print-title" data-i18n="print_invoice">INVOICE</h2>
+            <p id="print-company" data-i18n="print_company">StockMaster Systems</p>
+            <p id="invoice-date"><span data-i18n="print_date">Date: </span><span id="date-val"></span></p>
+            <p id="invoice-person"><span data-i18n="print_person">Person: </span><span id="person-val"></span></p>
+        </div>
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th data-i18n="print_desc">Description</th>
+                    <th data-i18n="print_meas">Measurement</th>
+                    <th data-i18n="print_rate">Rate/Unit</th>
+                    <th data-i18n="print_total">Total</th>
+                </tr>
+            </thead>
+            <tbody id="print-body"></tbody>
+        </table>
+        <div class="print-footer-info">
+            <p id="items-total-row"><span id="label-items-total-print"></span> <strong
+                    id="invoice-items-total"></strong></p>
+            <p id="prev-balance-row" style="display:none;"><span id="label-prev-bal-print"></span> <strong
+                    id="invoice-prev-bal"></strong></p>
+            <p id="grand-total-row" style="display:none;"><span id="label-grand-total-print"></span> <strong
+                    id="invoice-grand-total"></strong></p>
+            <p><span id="label-paid-print"></span> <strong id="invoice-paid"></strong></p>
+            <p><span id="label-rem-print"></span> <strong id="invoice-remaining"></strong></p>
+        </div>
+        <div class="invoice-footer">
+            <p data-i18n="print_footer">Thank you for your business!</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="translations.js?v=4" defer></script>
+    <script>
+        // Provide mock functions for app.js so it doesn't crash on this page
+        window.populateStockItemSelect = () => { };
+        window.renderInvoices = () => { };
+        window.updateDashboard = () => { };
+        window.populateDashboardDatalists = () => { };
+    </script>
+    <script src="store.js?v=4" defer></script>
+    <script src="app.js?v=4" defer></script>
+    <script src="stock.js?v=4" defer></script>
+    <!-- Included for Store access (assuming Store is in stock.js or invoice.js) -->
+    <script src="invoice.js?v=4" defer></script>
+    <script src="admin.js?v=4" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="supabase-config.js" defer></script>
+    <script src="auth.js?v=5" defer></script>
+    <script src="supabase-sync.js?v=1" defer></script>
+
+</body>
+
+</html>
